@@ -14,19 +14,20 @@ import {
   Scene,
   Vector3,
 } from "three";
-import { PointerLockControls } from "../controls/PointerLockControls";
+import { Controls, OrbitControls } from "../controls";
 import { Entity } from "./Entity";
 
 export class EditorPlayer implements Entity {
   camera: Camera;
 
   renderer: Renderer;
-  controls: any;
+  controls: Controls;
   moveForward: boolean = false;
   moveBackward: boolean = false;
   moveLeft: boolean = false;
   moveRight: boolean = false;
   canJump: boolean = false;
+  playerMode: boolean = false;
 
   velocity: Vector3;
   direction: Vector3;
@@ -54,9 +55,12 @@ export class EditorPlayer implements Entity {
     );
     this.camera.position.y = 10;
 
-    this.controls = new PointerLockControls(this.camera, document.body);
+    this.controls = new OrbitControls(
+      this.camera,
+      document.getElementById("three")
+    );
 
-    this.scene.add(this.controls.getObject());
+    this.scene.add(this.controls.object);
 
     const onKeyDown = (event: KeyboardEvent) => {
       switch (event.code) {
@@ -110,7 +114,6 @@ export class EditorPlayer implements Entity {
     this.raycaster = new Raycaster(new Vector3(), new Vector3(0, -1, 0), 0, 10);
 
     // floor
-
     let floorGeometry: PlaneGeometry | BufferGeometry = new PlaneGeometry(
       2000,
       2000,
@@ -157,7 +160,6 @@ export class EditorPlayer implements Entity {
     this.scene.add(floor);
 
     // objects
-
     const boxGeometry = new BoxGeometry(20, 20, 20).toNonIndexed();
 
     position = boxGeometry.attributes.position;
@@ -199,7 +201,7 @@ export class EditorPlayer implements Entity {
   animate() {
     const time = performance.now();
 
-    this.raycaster.ray.origin.copy(this.controls.getObject().position);
+    this.raycaster.ray.origin.copy(this.controls.object.position);
     this.raycaster.ray.origin.y -= 10;
 
     const intersections = this.raycaster.intersectObjects(this.objects);
@@ -227,16 +229,15 @@ export class EditorPlayer implements Entity {
       this.canJump = true;
     }
 
-    this.controls.moveRight(-this.velocity.x * delta);
-    this.controls.moveForward(-this.velocity.z * delta);
-
-    this.controls.getObject().position.y += this.velocity.y * delta; // new behavior
-
-    if (this.controls.getObject().position.y < 10) {
-      this.velocity.y = 0;
-      this.controls.getObject().position.y = 10;
-
-      this.canJump = true;
+    if (this.playerMode) {
+      // this.controls.moveRight(-this.velocity.x * delta);
+      // this.controls.moveForward(-this.velocity.z * delta);
+      this.controls.object.position.y += this.velocity.y * delta; // new behavior
+      if (this.controls.object.position.y < 10) {
+        this.velocity.y = 0;
+        this.controls.object.position.y = 10;
+        this.canJump = true;
+      }
     }
 
     this.prevTime = time;

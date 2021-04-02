@@ -20,6 +20,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/react-dom": "^17.0.3",
     "@types/three": "^0.126.2",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
@@ -31,6 +32,10 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.1.0",
+    "monaco-editor": "^0.21.2",
+    "react": "latest",
+    "react-dom": "^17.0.2",
     "three": "^0.127.0"
   }
 }

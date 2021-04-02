@@ -1,5 +1,4 @@
 import { Entity } from "./Entity";
-import { EditorPlayer } from "./Player";
 
 export class EntityManager implements Entity {
   constructor(readonly entities: Array<Entity> = []) {}

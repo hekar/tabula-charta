@@ -1,6 +1,7 @@
-import { Camera, Euler, EventDispatcher, Vector3 } from "three";
+import { Camera, Euler, EventDispatcher, Object3D, Vector3 } from "three";
+import { Controls } from "./Controls";
 
-export class PointerLockControls extends EventDispatcher {
+export class PointerLockControls extends EventDispatcher implements Controls {
   isLocked: boolean;
   minPolarAngle: number;
   maxPolarAngle: number;
@@ -10,6 +11,7 @@ export class PointerLockControls extends EventDispatcher {
   euler: Euler;
   PI_2: number;
   vec: Vector3;
+  object: Object3D;
 
   constructor(
     private readonly camera: Camera,
@@ -21,8 +23,10 @@ export class PointerLockControls extends EventDispatcher {
       console.warn(
         'THREE.PointerLockControls: The second parameter "domElement" is now mandatory.'
       );
-      domElement = document.body;
+      domElement = document.getElementById("three");
     }
+
+    this.object = camera;
 
     this.domElement = domElement;
     this.isLocked = false;
@@ -112,12 +116,6 @@ export class PointerLockControls extends EventDispatcher {
 
   dispose() {
     this.disconnect();
-  }
-
-  getObject() {
-    // retaining this method for backward compatibility
-
-    return this.camera;
   }
 
   getDirection() {
