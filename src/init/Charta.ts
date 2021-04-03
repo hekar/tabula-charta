@@ -26,8 +26,11 @@ export function startCharta() {
   const { camera } = player;
 
   const renderer = new WebGLRenderer();
-  renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+  renderer.setSize(window.innerWidth / 2, window.innerHeight, true);
   document.getElementById("three").appendChild(renderer.domElement);
+  window.addEventListener("resize", (event: UIEvent) => {
+    renderer.setSize(window.innerWidth / 2, window.innerHeight, true);
+  });
 
   const axis = new AxesHelper(10);
   scene.add(axis);
